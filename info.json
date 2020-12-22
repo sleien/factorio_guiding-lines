@@ -1,0 +1,10 @@
+{
+    "name": "guiding-line",
+    "version": "0.1.0",
+    "title": "Guiding Lines",
+    "author": "Noah Schneider",
+    "factorio_version": "1.0",
+    "contact": "Write me on Ko-Fi",
+    "homepage": "https://ko-fi.com/sleien",
+    "description": "Shows you where to put belts to make a straight line."
+}
