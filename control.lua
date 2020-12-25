@@ -2,67 +2,43 @@ local data_util = require("data_util")
 
 old_position={x=0,y=0,surface=0,distance=0,tick=0}
 
-function draw_lines(event)
+function draw(event)
+	
 	local player = game.get_player(event.player_index)
-	local x = math.floor(player.character.position.x)
-	local y = math.floor(player.character.position.y)
-	drawLine({x = x, y = y}, {x = x + 10, y = y + 10}, player.surface)
+	local distance = player.mod_settings["gl-distance"].value
+	local duration = player.mod_settings["gl-lifetime"].value
+	local x = math.floor(player.character.position.x) + 0.5
+	local y = math.floor(player.character.position.y) + 0.5
+	local color = player.mod_settings["gl-line-color"].value
+
+	draw_lines({x = x, y = y}, distance, color, duration, player.force, player.surface)
 end
 
-function drawLine(positionStart, positionEnd, surface)
+function draw_lines(position, distance, color, duration, force, surface)
 
-	--Find the total distance in each X and Y that has to be travelled
-	local xDistance = -(positionStart.x - positionEnd.x)
-	local yDistance = -(positionStart.y - positionEnd.y)
-	
-	--Find the total distance of the line
-	local distance = settings.player["gl-distance"].value
-	
-	--Find the number of steps to draw the line
-	local steps = settings.player["gl-distance"].value
-	
-	--Start position
-	local xPlacement = positionStart.x
-	local yPlacement = positionStart.y
+	x = position.x
+	y = position.y
 
-	local density = settings.player["gl-density"].value
-	
-	if old_position.tick ~= 0 then
-		remove_line(old_position.x,old_position.y,game.get_surface(old_position.surface),old_position.distance)
-	end
+	surface.create_entity({
+		name = "guiding-line-line-"..color,
+		position = position,
+		force = force,
+		source_position = {x = x - distance, y = y},
+		target_position = {x = x + distance, y = y},
+		duration = duration * 60
+	})
 
-	old_position={x=xPlacement,y=yPlacement,surface=surface.name,distance=distance,tick=game.tick}
-
-	--For each step, place a dot step distance closer to the end point
-	for i=0, steps do
-		surface.create_decoratives{
-			check_collision=false,
-			decoratives={
-				{name="draw-line-dot", position={xPlacement+i, yPlacement},amount=density},
-				{name="draw-line-dot", position={xPlacement-i, yPlacement},amount=density},
-				{name="draw-line-dot", position={xPlacement, yPlacement+i},amount=density},
-				{name="draw-line-dot", position={xPlacement, yPlacement-i},amount=density}
-		}}
-	end
+	surface.create_entity({
+		name = "guiding-line-line-"..color,
+		position = {x = x, y = y},
+		force = force,
+		source_position = {x = x, y = y + distance},
+		target_position = {x = x, y = y - distance},
+		duration = duration * 60
+	})
 end
 
-function remove_line(positionX, positionY, surface, distance)
-	surface.destroy_decoratives({left_top={positionX-distance, positionY-distance}, right_bottom={positionX+distance, positionY+distance},name="draw-line-dot"})
-	old_position={x=0,y=0,surface=0,distance=0,tick=0}
-end
-
-function check_line_age()
-	if old_position.tick ~= 0 then
-		local max_age = settings.player["gl-lifetime"].value * 60
-		if old_position.tick + max_age < game.tick then
-			remove_line(old_position.x,old_position.y,game.get_surface(old_position.surface),old_position.distance)
-		end
-	end
-end
-
-script.on_event(data_util.mod_prefix.."generate-drawing-tool", draw_lines)
-script.on_event(defines.events.on_tick, check_line_age)
-
+script.on_event(data_util.mod_prefix.."draw-lines", draw)
 --[[
 
 	All events defined:

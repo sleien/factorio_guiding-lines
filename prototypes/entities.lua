@@ -1,25 +1,58 @@
-data:extend(
-{
-  {
-    type = "optimized-decorative",
-    name = "draw-line-dot",
-    flags = {"placeable-neutral", "placeable-off-grid", "not-on-map"},
-    icon = "__guiding-line__/graphics/dot.png",
-    subgroup = "grass",
-    order = "z",
-    collisionBox = {{-0, -0}, {0, 0}},
-	  collisionMask = {"ghost-layer"},
-    selectable_in_game = false,
-    render_layer = "decorative",
-    --autoplace = autoplace_settings(nil, 0.05, {{{35, 1}, {0, 0.7}}}),
-    pictures =
-    {
-      {
-        filename = "__guiding-line__/graphics/dot.png",
-        width = 5,
-        height = 5,
-      }
-    }
-  }
-}
-)
+local function beam(name, tint)
+	data:extend({
+		{
+			type = "beam",
+			width = 0.5,
+			name = "guiding-line-line-"..name,
+			damage_interval = 1000,
+			random_target_offset = false,
+			flags = { "not-on-map" },
+			body = {
+				{
+					animation_speed = 0.5,
+					blend_mode = "additive",
+					filename = "__guiding-line__/graphics/guiding-line-body.png",
+					flags = {"mipmap"},
+					frame_count = 8,
+					height = 12,
+					line_length = 8,
+					scale = 0.5,
+					width = 64,
+					tint = tint,
+				}
+			},
+			head = {
+				animation_speed = 0.5,
+				blend_mode = "additive",
+        filename = "__guiding-line__/graphics/guiding-line-body.png",
+				flags = {"mipmap"},
+				frame_count = 8,
+				height = 12,
+				line_length = 8,
+				scale = 0.5,
+				width = 64,
+				tint = tint,
+			},
+			tail = {
+				animation_speed = 0.5,
+				blend_mode = "additive",
+        filename = "__guiding-line__/graphics/guiding-line-body.png",
+				flags = {"mipmap"},
+				frame_count = 8,
+				height = 12,
+				line_length = 8,
+				scale = 0.5,
+				width = 64,
+				tint = tint,
+			},
+		},
+	})
+end
+
+beam("red", { r = 0.4, g = 0, b = 0, a = 1.0 })
+beam("green", { r = 0, g = 0.3, b = 0, a = 1.0 })
+beam("blue", { r = 0.1, g = 0.1, b = 1, a = 1.0 })
+beam("yellow", { r = 0.3, g = 0.3, b = 0, a = 1.0 })
+beam("pink", { r = 0.6, g = 0.1, b = 0.3, a = 1.0 })
+beam("cyan", { r = 0.0, g = 0.3, b = 0.3, a = 1.0 })
+beam("white", { r = 0.3, g = 0.3, b = 0.3, a = 1.0 })
