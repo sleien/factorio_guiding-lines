@@ -7,8 +7,8 @@ function draw(event)
 	local player = game.get_player(event.player_index)
 	local distance = player.mod_settings["gl-distance"].value
 	local duration = player.mod_settings["gl-lifetime"].value
-	local x = math.floor(player.character.position.x) + 0.5
-	local y = math.floor(player.character.position.y) + 0.5
+	local x = math.floor(player.position.x) + 0.5
+	local y = math.floor(player.position.y) + 0.5
 	local color = player.mod_settings["gl-line-color"].value
 
 	draw_lines({x = x, y = y}, distance, color, duration, player.force, player.surface)
