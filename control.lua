@@ -19,7 +19,27 @@ function draw_lines(position, distance, color, duration, force, surface)
 	x = position.x
 	y = position.y
 
-	surface.create_entity({
+	rendering.draw_line{
+		surface = surface,
+		from = {x = x - distance, y = y},
+		to = {x = x + distance, y = y},
+		color = {r = 1},
+		width = 1,
+		time_to_live = duration * 60,
+		players = [player]
+	}
+
+	rendering.draw_line{
+		surface = surface,
+		from = {x = x, y = y + distance},
+		to = {x = x, y = y - distance},
+		color = {r = 1},
+		width = 1,
+		time_to_live = duration * 60,
+		players = [player]
+	}
+
+	--[[surface.create_entity({
 		name = "guiding-line-line-"..color,
 		position = position,
 		force = force,
@@ -35,7 +55,7 @@ function draw_lines(position, distance, color, duration, force, surface)
 		source_position = {x = x, y = y + distance},
 		target_position = {x = x, y = y - distance},
 		duration = duration * 60
-	})
+	})]]
 end
 
 script.on_event(data_util.mod_prefix.."draw-lines", draw)
@@ -48,31 +68,4 @@ script.on_event(data_util.mod_prefix.."draw-lines", draw)
 	https://lua-api.factorio.com/latest/LuaBootstrap.html#LuaBootstrap.on_event
 
 
-]]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
---[[
-
-function container_placed(event)
-	--Add an in-game alert saying a container was placed
-end
-
-local filters = {{filter="type", type="container"}}
--- Gets raised whenever a player builds an entity
-script.on_event(defines.events.on_built_entity, container_placed, filters) --link event to function
 ]]
